@@ -19,29 +19,18 @@ public class Main {
         System.out.println(part2(input));
     }
 
-    private static long part1(List<String> input) {
-        List<Map<Integer, Long>> rows = input.stream()
+    private static int part1(List<String> input) {
+        return input.stream()
                 .map(String::chars)
                 .map(stream -> stream.boxed().collect(Collectors.groupingBy(Function.identity(), Collectors.counting())))
-                .collect(Collectors.toList());
-
-        long doubles = countByOccurence(rows, 2L);
-        long triplets = countByOccurence(rows, 3L);
-
-        return doubles * triplets;
-    }
-
-    private static long countByOccurence(List<Map<Integer, Long>> rows, long occurrences) {
-        return rows.stream()
-                .filter(map -> map.values().contains(occurrences))
-                .count();
+                .reduce(new ChecksumGenerator(), ChecksumGenerator::addRow, /*never used ->*/ (a,b) -> a)
+                .checksum();
     }
 
     private static String part2(List<String> input) {
-        List<String> copy = new ArrayList<>(input);
+        /*inefficient, but it's a single statement method :D*/
         return input.stream()
-                .filter(copy::remove)
-                .flatMap(line -> copy.stream().map(line2 -> new Pair<>(line, line2)))
+                .flatMap(line -> input.stream().map(line2 -> new Pair<>(line, line2)))
                 .filter(pair -> differences(pair.getFirst(), pair.getSecond()) == 1)
                 .map(pair -> formatDifference(pair.getFirst(), pair.getSecond()))
                 .findFirst()
@@ -59,6 +48,22 @@ public class Main {
                 .filter(i -> s1.charAt(i) == s2.charAt(i))
                 .mapToObj(i -> Character.toString(s1.charAt(i)))
                 .collect(Collectors.joining());
+    }
+
+    private static class ChecksumGenerator {
+
+        private int doubles = 0;
+        private int triplets = 0;
+
+        ChecksumGenerator addRow(Map<Integer, Long> row) {
+            doubles += row.containsValue(2L) ? 1 : 0;
+            triplets += row.containsValue(3L) ? 1 : 0;
+            return this;
+        }
+
+        int checksum() {
+            return doubles*triplets;
+        }
     }
 
 }

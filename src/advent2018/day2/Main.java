@@ -16,7 +16,7 @@ public class Main {
         List<String> input = InputLoader.loadInput();
 
         System.out.println(part1(input));
-        System.out.println(part2(input));
+        System.out.println(part2(input.stream().distinct().collect(Collectors.toList())));
     }
 
     private static int part1(List<String> input) {
@@ -28,7 +28,6 @@ public class Main {
     }
 
     private static String part2(List<String> input) {
-        /*potentially inefficient (if duplicates appear), but it's a single statement method :D*/
         return input.stream()
                 .flatMap(line -> pairLines(line, input))
                 .filter(pair -> differences(pair.getFirst(), pair.getSecond()) == 1)

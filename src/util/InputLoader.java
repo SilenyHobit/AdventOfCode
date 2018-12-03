@@ -12,17 +12,14 @@ public class InputLoader {
     private static final Pattern pattern = Pattern.compile("advent(\\d{4})\\.(day\\d{1,2})");
 
     public static List<String> loadInput() throws Exception {
-        String trace = Arrays.stream(Thread.currentThread().getStackTrace())
+        return Arrays.stream(Thread.currentThread().getStackTrace())
                 .map(StackTraceElement::toString)
                 .skip(2L)
                 .findFirst()
-                .get();
-
-        Matcher m = pattern.matcher(trace);
-        if (m.find())
-            return Files.readAllLines(Paths.get("inputs", m.group(1), m.group(2)));
-        else
-            throw new IllegalArgumentException();
+                .map(pattern::matcher)
+                .filter(Matcher::find)
+                .map(matcher -> CheckedWrapper.wrap(() -> Files.readAllLines(Paths.get("inputs", matcher.group(1), matcher.group(2)))))
+                .orElseThrow(IllegalArgumentException::new);
     }
 
 }

@@ -26,16 +26,10 @@ public class Main {
         System.out.println(part2(rectangles));
     }
 
-    private static long part1(List<LocalRectangle> rectangles) {
-        int[][] fabric = rectangles.stream()
+    private static int part1(List<LocalRectangle> rectangles) {
+        return rectangles.stream()
                 .flatMap(rectangle -> listCoordinates(rectangle.x, rectangle.y, rectangle.width, rectangle.height))
-                .reduce(new int[1000][1000], (array, point) -> {
-                    array[point.x][point.y]++;
-                    return array;
-                }, /*never used ->*/ (a,b) -> a);
-
-        return Arrays.stream(fabric)
-                .mapToInt(array -> Arrays.stream(array).map(i -> i > 1 ? 1 : 0).sum())
+                .reduce(new Fabric(), Fabric::addPoint, /*never used ->*/ (a, b) -> a)
                 .sum();
     }
 
@@ -69,6 +63,21 @@ public class Main {
 
         public int getId() {
             return id;
+        }
+    }
+
+    private static class Fabric {
+        private final int[][] fabric = new int[1000][1000];
+
+        Fabric addPoint(Point point) {
+            fabric[point.x][point.y]++;
+            return this;
+        }
+
+        int sum() {
+            return Arrays.stream(fabric)
+                    .mapToInt(array -> Arrays.stream(array).map(i -> i > 1 ? 1 : 0).sum())
+                    .sum();
         }
     }
 

@@ -25,14 +25,16 @@ public class Main {
                 .map(stream -> stream.boxed().collect(Collectors.groupingBy(Function.identity(), Collectors.counting())))
                 .collect(Collectors.toList());
 
-        long doubles = rows.stream()
-                .filter(map -> map.values().contains(2L))
-                .count();
-        long triplets = rows.stream()
-                .filter(map -> map.values().contains(3L))
-                .count();
+        long doubles = countByOccurence(rows, 2L);
+        long triplets = countByOccurence(rows, 3L);
 
         return doubles * triplets;
+    }
+    
+    private static long countByOccurence(List<Map<Integer, Long>> rows, long occurrences) {
+        return rows.stream()
+                .filter(map -> map.values().contains(occurrences))
+                .count();
     }
 
     private static String part2(List<String> input) {

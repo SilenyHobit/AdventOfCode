@@ -27,11 +27,12 @@ public class Main {
     }
 
     private static long part1(List<LocalRectangle> rectangles) {
-        int[][] fabric = new int[1000][1000];
-
-        rectangles.stream()
+        int[][] fabric = rectangles.stream()
                 .flatMap(rectangle -> listCoordinates(rectangle.x, rectangle.y, rectangle.width, rectangle.height))
-                .forEach(point -> fabric[point.x][point.y]++);
+                .reduce(new int[1000][1000], (array, point) -> {
+                    array[point.x][point.y]++;
+                    return array;
+                }, /*never used ->*/ (a,b) -> a);
 
         return Arrays.stream(fabric)
                 .mapToInt(array -> Arrays.stream(array).map(i -> i > 1 ? 1 : 0).sum())

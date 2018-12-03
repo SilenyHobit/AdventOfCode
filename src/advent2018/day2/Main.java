@@ -30,7 +30,7 @@ public class Main {
 
         return doubles * triplets;
     }
-    
+
     private static long countByOccurence(List<Map<Integer, Long>> rows, long occurrences) {
         return rows.stream()
                 .filter(map -> map.values().contains(occurrences))

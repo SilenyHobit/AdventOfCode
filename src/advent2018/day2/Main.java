@@ -3,12 +3,12 @@ package advent2018.day2;
 import util.InputLoader;
 import util.Pair;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -23,18 +23,24 @@ public class Main {
         return input.stream()
                 .map(String::chars)
                 .map(stream -> stream.boxed().collect(Collectors.groupingBy(Function.identity(), Collectors.counting())))
-                .reduce(new ChecksumGenerator(), ChecksumGenerator::addRow, /*never used ->*/ (a,b) -> a)
+                .reduce(new ChecksumGenerator(), ChecksumGenerator::addRow, /*never used ->*/ (a, b) -> a)
                 .checksum();
     }
 
     private static String part2(List<String> input) {
-        /*inefficient, but it's a single statement method :D*/
+        /*potentially inefficient (if duplicates appear), but it's a single statement method :D*/
         return input.stream()
-                .flatMap(line -> input.stream().map(line2 -> new Pair<>(line, line2)))
+                .flatMap(line -> pairLines(line, input))
                 .filter(pair -> differences(pair.getFirst(), pair.getSecond()) == 1)
                 .map(pair -> formatDifference(pair.getFirst(), pair.getSecond()))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    private static Stream<Pair<String, String>> pairLines(String line, List<String> input) {
+        return input.subList(input.indexOf(line) + 1, input.size())
+                .stream()
+                .map(line2 -> new Pair<>(line, line2));
     }
 
     private static int differences(String s1, String s2) {
@@ -62,7 +68,7 @@ public class Main {
         }
 
         int checksum() {
-            return doubles*triplets;
+            return doubles * triplets;
         }
     }
 

@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -30,15 +31,14 @@ public class Main {
     }
 
     private static int part1(List<Event> input) {
-        return compute(input, Comparator.<Map.Entry<String, List<GuardDuty>>>comparingInt(entry -> entry.getValue().stream().mapToInt(GuardDuty::sum).sum()).reversed());
+        return compute(input, duties -> duties.stream().mapToInt(GuardDuty::sum).sum());
     }
 
     private static int part2(List<Event> input) {
-        return compute(input, Comparator.<Map.Entry<String, List<GuardDuty>>>comparingInt(entry ->
-                entry.getValue().stream().reduce(new DutyCombiner(), DutyCombiner::addDuty, (a, b) -> a).maxValue()).reversed());
+        return compute(input, duties -> duties.stream().reduce(new DutyCombiner(), DutyCombiner::addDuty, (a, b) -> a).maxValue());
     }
 
-    private static int compute(List<Event> input, Comparator<Map.Entry<String, List<GuardDuty>>> comparator) {
+    private static int compute(List<Event> input, Function<List<GuardDuty>, Integer> dutiesToValue) {
         return input.stream()
                 .reduce(new GuardProcessor(), GuardProcessor::process, (a, b) -> a)
                 .duties()
@@ -46,7 +46,7 @@ public class Main {
                 .collect(Collectors.groupingBy(GuardDuty::guardId, Collectors.toList()))
                 .entrySet()
                 .stream()
-                .sorted(comparator)
+                .sorted(Comparator.<Map.Entry<String, List<GuardDuty>>>comparingInt(entry -> dutiesToValue.apply(entry.getValue())).reversed())
                 .findFirst()
                 .map(Map.Entry::getValue)
                 .map(List::stream)

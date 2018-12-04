@@ -18,9 +18,15 @@ public class InputLoader {
         return loadInput(3L);
     }
 
-    public static <T> List<T> loadInput(InputConverter<T> converter) throws Exception {
+    public static <T> List<T> loadInputSorted(InputConverter<T> converter) throws Exception {
         return InputLoader.loadInput(3L).stream()
                 .sorted()
+                .map(converter::convert)
+                .collect(Collectors.toList());
+    }
+
+    public static <T> List<T> loadInput(InputConverter<T> converter) throws Exception {
+        return InputLoader.loadInput(3L).stream()
                 .map(converter::convert)
                 .collect(Collectors.toList());
     }

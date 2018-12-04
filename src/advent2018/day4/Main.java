@@ -23,17 +23,10 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         InputConverter<Event> converter = new InputConverter<>(Arrays.asList(fallAsleep, wakeUp, startShift));
-        List<Event> input = loadInput(converter);
+        List<Event> input = InputLoader.loadInput(converter);
 
         System.out.println(part1(input));
         System.out.println(part2(input));
-    }
-
-    private static List<Event> loadInput(InputConverter<Event> converter) throws Exception {
-        return InputLoader.loadInput().stream()
-                .sorted()
-                .map(converter::convert)
-                .collect(Collectors.toList());
     }
 
     private static int part1(List<Event> input) {

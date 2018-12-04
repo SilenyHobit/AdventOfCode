@@ -19,7 +19,7 @@ public class DutyCombiner {
         return this;
     }
 
-    int[] change(int[] array, int minute, int change) {
+    private int[] change(int[] array, int minute, int change) {
         array[minute] += change;
         return array;
     }
@@ -28,7 +28,7 @@ public class DutyCombiner {
         return Integer.parseInt(id) * maxIndex();
     }
 
-    int maxIndex() {
+    private int maxIndex() {
         return Optional.of(Collections.max(Arrays.stream(minutes).boxed().collect(Collectors.toList())))
                 .map(value -> Arrays.stream(minutes).boxed().collect(Collectors.toList()).indexOf(value))
                 .orElseThrow(IllegalArgumentException::new);

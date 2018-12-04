@@ -1,11 +1,14 @@
 package util;
 
+import advent2018.day4.events.Event;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class InputLoader {
 
@@ -20,6 +23,13 @@ public class InputLoader {
                 .filter(Matcher::find)
                 .map(matcher -> CheckedWrapper.wrap(() -> Files.readAllLines(Paths.get("inputs", matcher.group(1), matcher.group(2)))))
                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public static List<Event> loadInput(InputConverter<Event> converter) throws Exception {
+        return InputLoader.loadInput().stream()
+                .sorted()
+                .map(converter::convert)
+                .collect(Collectors.toList());
     }
 
 }

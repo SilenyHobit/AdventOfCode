@@ -18,7 +18,7 @@ public class InputLoader {
         return loadInput(3L);
     }
 
-    public static List<Event> loadInput(InputConverter<Event> converter) throws Exception {
+    public static <T> List<T> loadInput(InputConverter<T> converter) throws Exception {
         return InputLoader.loadInput(3L).stream()
                 .sorted()
                 .map(converter::convert)

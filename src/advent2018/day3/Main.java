@@ -20,7 +20,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         InputConverter<LocalRectangle> converter = new InputConverter<>(Collections.singletonList(conversion));
-        List<LocalRectangle> rectangles = InputLoader.loadInput().stream().map(converter::convert).collect(Collectors.toList());
+        List<LocalRectangle> rectangles = InputLoader.loadInput(converter);
 
         System.out.println(part1(rectangles));
         System.out.println(part2(rectangles));

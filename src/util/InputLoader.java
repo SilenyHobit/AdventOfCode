@@ -1,7 +1,5 @@
 package util;
 
-import advent2018.day4.events.Event;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;

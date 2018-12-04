@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatterBuilder;
 
 public abstract class Event {
 
-    static final DateTimeFormatter FMT = new DateTimeFormatterBuilder()
+    private static final DateTimeFormatter FMT = new DateTimeFormatterBuilder()
             .appendPattern("yyyy-MM-dd HH:mm")
             .toFormatter()
             .withZone(ZoneId.of("UTC"));

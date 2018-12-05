@@ -59,24 +59,11 @@ public class Main {
             if (skipNext) {
                 skipNext = false;
             } else {
-                skipNext = skipNext();
+                skipNext = position != currentString.length-1 && Math.abs(currentString[position] - currentString[position+1]) == 32;
                 replaced = skipNext || replaced;
-                newString = append();
+                newString.append(skipNext ? "" : Character.toString(currentString[position]));
             }
             return this;
-        }
-
-        private StringBuilder append() {
-            return Optional.of(skipNext)
-                    .filter(b -> !b)
-                    .map(b -> newString.append(currentString[position]))
-                    .orElse(newString);
-        }
-
-        private boolean skipNext() {
-            return Optional.of(position != currentString.length-1)
-                    .map(b -> b && Math.abs(currentString[position] - currentString[position+1]) == 32)
-                    .orElse(false);
         }
 
         boolean isFinished() {

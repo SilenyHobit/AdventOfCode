@@ -34,43 +34,31 @@ public class Main {
     }
 
     private static class Reducer {
-        private char[] currentString;
         private StringBuilder newString;
-        private boolean replaced;
-        private boolean skipNext;
-        private int sum;
-        private int position;
+        private boolean finished;
 
         public Reducer(String s) {
-            newString = new StringBuilder();
-            currentString = s.toCharArray();
+            newString = new StringBuilder().append(s);
         }
 
         Reducer process(int index) {
-            if (index-sum == currentString.length) {
-                sum += currentString.length;
-                currentString = newString.toString().toCharArray();
-                newString = new StringBuilder();
-                replaced = false;
-            }
-
-            position = index-sum;
-            if (skipNext) {
-                skipNext = false;
-            } else {
-                skipNext = position != currentString.length-1 && Math.abs(currentString[position] - currentString[position+1]) == 32;
-                replaced = replaced || skipNext;
-                newString.append(skipNext ? "" : Character.toString(currentString[position]));
-            }
+            int length = newString.length()-1;
+            long replacements = IntStream.range(1, length)
+                    .map(i -> length-i)
+                    .filter(i -> i <newString.length())
+                    .filter(i -> Math.abs(newString.substring(i-1,i+1).charAt(0) - newString.substring(i-1,i+1).charAt(1)) == 32)
+                    .mapToObj(i -> newString.delete(i-1, i+1))
+                    .count();
+            finished = replacements == 0L;
             return this;
         }
 
         boolean isFinished() {
-            return position == currentString.length - 1 && !replaced;
+            return finished;
         }
 
         int result() {
-            return currentString.length;
+            return newString.length();
         }
 
     }

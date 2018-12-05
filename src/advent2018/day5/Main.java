@@ -2,7 +2,6 @@ package advent2018.day5;
 
 import util.InputLoader;
 
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -37,10 +36,10 @@ public class Main {
     private static class Reducer {
         private char[] currentString;
         private StringBuilder newString;
-        boolean replaced;
-        boolean skipNext;
-        int sum;
-        int position;
+        private boolean replaced;
+        private boolean skipNext;
+        private int sum;
+        private int position;
 
         public Reducer(String s) {
             newString = new StringBuilder();
@@ -60,7 +59,7 @@ public class Main {
                 skipNext = false;
             } else {
                 skipNext = position != currentString.length-1 && Math.abs(currentString[position] - currentString[position+1]) == 32;
-                replaced = skipNext || replaced;
+                replaced = replaced || skipNext;
                 newString.append(skipNext ? "" : Character.toString(currentString[position]));
             }
             return this;

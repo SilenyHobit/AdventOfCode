@@ -70,7 +70,7 @@ public class Main {
         }
 
         boolean isFinished() {
-            return position == currentString.length - 2 && !replaced;
+            return position == currentString.length - 1 && !replaced;
         }
 
         int result() {

@@ -2,8 +2,8 @@ package advent2018.day5;
 
 import util.InputLoader;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Main {
 
@@ -26,9 +26,8 @@ public class Main {
     }
 
     private static int part1(Reducer reducer) {
-        return Stream.generate(reducer::generate)
-                .flatMap(IntStream::boxed)
-                .map(reducer::process)
+        return IntStream.iterate(0, i -> i+1)
+                .mapToObj(reducer::process)
                 .filter(Reducer::isFinished)
                 .findFirst()
                 .map(Reducer::result)
@@ -40,33 +39,44 @@ public class Main {
         private StringBuilder newString;
         boolean replaced;
         boolean skipNext;
+        int sum;
         int position;
 
         public Reducer(String s) {
-            newString = new StringBuilder().append(s);
-        }
-
-        IntStream generate() {
-            replaced = false;
-            skipNext = false;
-            currentString = newString.toString().toCharArray();
             newString = new StringBuilder();
-            return IntStream.range(0, currentString.length);
+            currentString = s.toCharArray();
         }
 
         Reducer process(int index) {
-            position = index;
+            if (index-sum == currentString.length) {
+                sum += currentString.length;
+                currentString = newString.toString().toCharArray();
+                newString = new StringBuilder();
+                replaced = false;
+            }
+
+            position = index-sum;
             if (skipNext) {
                 skipNext = false;
             } else {
-                if (index != currentString.length-1) {
-                    skipNext = Math.abs(currentString[index] - currentString[index + 1]) == 32;
-                    replaced = skipNext || replaced;
-                }
-                if (!skipNext)
-                    newString.append(currentString[index]);
+                skipNext = skipNext();
+                replaced = skipNext || replaced;
+                newString = append();
             }
             return this;
+        }
+
+        private StringBuilder append() {
+            return Optional.of(skipNext)
+                    .filter(b -> !b)
+                    .map(b -> newString.append(currentString[position]))
+                    .orElse(newString);
+        }
+
+        private boolean skipNext() {
+            return Optional.of(position != currentString.length-1)
+                    .map(b -> b && Math.abs(currentString[position] - currentString[position+1]) == 32)
+                    .orElse(false);
         }
 
         boolean isFinished() {

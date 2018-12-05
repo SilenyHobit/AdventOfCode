@@ -3,7 +3,6 @@ package advent2018.day5;
 import util.InputLoader;
 
 import java.util.Comparator;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -32,8 +31,8 @@ public class Main {
                 .filter(i -> i < input.length())
                 .filter(i -> Math.abs(input.substring(i-1,i+1).charAt(0) - input.substring(i-1,i+1).charAt(1)) == 32)
                 .mapToObj(i -> input.delete(i-1, i+1))
-                .sorted(Comparator.comparingInt(builder -> builder.length()))
                 .map(builder -> builder.length())
+                .sorted()
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }

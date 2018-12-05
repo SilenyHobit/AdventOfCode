@@ -32,7 +32,7 @@ public class GeneralVM {
         return IntStream.generate(() -> 0)
                 .mapToObj(i -> program.get(position.get()))
                 .map(function -> function.perform(this))
-                .filter(i -> i < 0 || i > program.size())
+                .filter(i -> i < 0 || i >= program.size())
                 .map(i -> this)
                 .findFirst()
                 .orElseThrow(RuntimeException::new);

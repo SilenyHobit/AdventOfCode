@@ -2,6 +2,7 @@ package advent2018.day5;
 
 import util.InputLoader;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -10,13 +11,13 @@ public class Main {
     public static void main(String[] args) throws Exception {
         String input = InputLoader.loadInput().get(0);
 
-        System.out.println(part1(input));
+        System.out.println(part1(new StringBuilder(input)));
         System.out.println(part2(input));
     }
 
     private static int part2(String input) {
         return IntStream.range('a', 'z'+1)
-                .map(i -> part1(replace(input, i)))
+                .map(i -> part1(new StringBuilder(replace(input, i))))
                 .min()
                 .orElseThrow(IllegalArgumentException::new);
     }
@@ -25,33 +26,15 @@ public class Main {
         return s.replace(Character.toString((char)c), "").replace(Character.toString((char)(c - 32)), "");
     }
 
-    private static int part1(String input) {
-        return Optional.of(new Reducer(input))
-                .map(Reducer::reduce)
-                .map(Reducer::result)
+    private static int part1(StringBuilder input) {
+        return IntStream.range(-(input.length()-1), 0)
+                .map(i -> -i)
+                .filter(i -> i < input.length())
+                .filter(i -> Math.abs(input.substring(i-1,i+1).charAt(0) - input.substring(i-1,i+1).charAt(1)) == 32)
+                .mapToObj(i -> input.delete(i-1, i+1))
+                .sorted(Comparator.comparingInt(builder -> builder.length()))
+                .map(builder -> builder.length())
+                .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
-    }
-
-    private static class Reducer {
-        private StringBuilder newString;
-
-        public Reducer(String s) {
-            newString = new StringBuilder().append(s);
-        }
-
-        Reducer reduce() {
-            int length = newString.length()-1;
-            IntStream.range(1, length)
-                    .map(i -> length-i)
-                    .filter(i -> i <newString.length())
-                    .filter(i -> Math.abs(newString.substring(i-1,i+1).charAt(0) - newString.substring(i-1,i+1).charAt(1)) == 32)
-                    .mapToObj(i -> newString.delete(i-1, i+1))
-                    .count();
-            return this;
-        }
-
-        int result() {
-            return newString.length();
-        }
     }
 }

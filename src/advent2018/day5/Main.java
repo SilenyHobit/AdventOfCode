@@ -2,7 +2,6 @@ package advent2018.day5;
 
 import util.InputLoader;
 
-import java.util.Comparator;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -29,7 +28,7 @@ public class Main {
         return IntStream.range(-(input.length()-1), 0)
                 .map(i -> -i)
                 .filter(i -> i < input.length())
-                .filter(i -> Math.abs(input.substring(i-1,i+1).charAt(0) - input.substring(i-1,i+1).charAt(1)) == 32)
+                .filter(i -> Math.abs(input.charAt(i-1) - input.charAt(i)) == 32)
                 .mapToObj(i -> input.delete(i-1, i+1))
                 .map(builder -> builder.length())
                 .sorted()

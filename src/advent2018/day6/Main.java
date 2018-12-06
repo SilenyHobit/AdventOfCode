@@ -9,14 +9,14 @@ import java.util.stream.IntStream;
 
 public class Main {
 
-    private static final int size = 1000;
+    private static final int size = 400;
     private final static Conversion<Point> conversion = new Conversion<>(Pattern.compile("(\\d+), (\\d+)"),
             m -> new Point(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2))));
 
     public static void main(String[] args) throws Exception {
-        IntStream.range(-size/2, size/2)
+        IntStream.range(0, size)
                 .boxed()
-                .flatMap(i -> IntStream.range(-size/2, size/2).mapToObj(j -> new Point(i, j)))
+                .flatMap(i -> IntStream.range(0, size).mapToObj(j -> new Point(i, j)))
                 .reduce(createField(), Field::addPoint, (a,b) -> a)
                 .asOptional()
                 .map(Field::printPart1)

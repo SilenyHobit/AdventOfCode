@@ -3,7 +3,7 @@ package advent2018.day6;
 import util.Pair;
 import util.Printer;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -15,16 +15,14 @@ import java.util.stream.Collectors;
 class Field {
     private final Map<Point, AtomicLong> pointsClaim;
     private final List<Point> points;
-    private final int lowerBound;
-    private final int upperBound;
+    private final int size;
 
     private int areaCount;
 
     Field(List<Point> points, int size) {
         this.points = points;
         this.pointsClaim = points.stream().collect(Collectors.toMap(Function.identity(), point -> new AtomicLong(0L)));
-        this.lowerBound = -size/2;
-        this.upperBound = (size/2)-1;
+        this.size = size - 1;
     }
 
     Field addPoint(Point point) {
@@ -66,7 +64,7 @@ class Field {
     }
 
     private boolean isOnEdge(Point point) {
-        return point.x == lowerBound || point.x == upperBound || point.y == lowerBound || point.y == upperBound;
+        return point.x == 0 || point.x == size || point.y == 0 || point.y == size;
     }
 
     Field printPart1() {

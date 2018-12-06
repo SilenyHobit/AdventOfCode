@@ -6,6 +6,7 @@ import util.InputLoader;
 import util.Pair;
 
 import java.awt.*;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,6 +17,7 @@ import java.util.stream.IntStream;
 
 public class Main {
 
+    private static final int size = 1000;
     private static final AtomicInteger counter = new AtomicInteger(1);
     private final static Conversion<LocalPoint> conversion = new Conversion<>(Pattern.compile("(\\d+), (\\d+)"),
             m -> new LocalPoint(counter.incrementAndGet(), Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2))));
@@ -23,14 +25,14 @@ public class Main {
     public static void main(String[] args) throws Exception {
         List<LocalPoint> points = InputLoader.loadInput(new InputConverter<>(Collections.singletonList(conversion)));
 
-        int size = 1000;
-        Field f = IntStream.range(-size/2, size/2)
+        IntStream.range(-size/2, size/2)
                 .boxed()
                 .flatMap(i -> IntStream.range(-size/2, size/2).mapToObj(j -> new Point(i, j)))
-                .reduce(new Field(points, size), Field::addPoint, (a,b) -> a);
-
-        System.out.println(f.part1());
-        System.out.println(f.part2());
+                .reduce(new Field(points, size), Field::addPoint, (a,b) -> a)
+                .asOptional()
+                .map(field -> field.part1(System.out))
+                .map(field -> field.part2(System.out))
+                .orElseThrow(RuntimeException::new);
     }
 
     private static class LocalPoint extends Point {
@@ -79,16 +81,25 @@ public class Main {
             return point.x == lowerBound || point.x == upperBound || point.y == lowerBound || point.y == upperBound;
         }
 
-        public long part1() {
+        public Field part1(PrintStream writer) {
             return pointsClaim.values().stream()
                     .map(AtomicLong::get)
                     .sorted(Comparator.reverseOrder())
                     .findFirst()
+                    .map(i -> writer.printf("%d%n", i))
+                    .map(w -> this)
                     .orElseThrow(RuntimeException::new);
         }
 
-        public int part2() {
-            return areaCount;
+        public Field part2(PrintStream writer) {
+            return Optional.of(areaCount)
+                    .map(i -> writer.printf("%d%n", i))
+                    .map(w -> this)
+                    .orElseThrow(RuntimeException::new);
+        }
+
+        public Optional<Field> asOptional() {
+            return Optional.of(this);
         }
     }
 

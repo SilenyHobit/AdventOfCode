@@ -1,9 +1,11 @@
 package advent2018.day1;
 
 import util.InputLoader;
+import util.Printer;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -13,10 +15,10 @@ import java.util.stream.Stream;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        List<Long> input = InputLoader.loadInput().stream().map(Long::parseLong).collect(Collectors.toList());
-
-        System.out.println(part1(input));
-        System.out.println(part2(input, new Device()));
+        Optional.of(InputLoader.loadInput().stream().map(Long::parseLong).collect(Collectors.toList()))
+                .map(input -> Printer.print(part1(input), input))
+                .map(input -> Printer.print(part2(input, new Device()), input))
+                .orElseThrow(RuntimeException::new);
     }
 
     private static long part1(List<Long> input) {

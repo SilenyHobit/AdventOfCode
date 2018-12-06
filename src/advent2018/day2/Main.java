@@ -2,9 +2,11 @@ package advent2018.day2;
 
 import util.InputLoader;
 import util.Pair;
+import util.Printer;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -13,10 +15,11 @@ import java.util.stream.Stream;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        List<String> input = InputLoader.loadInput();
-
-        System.out.println(part1(input));
-        System.out.println(part2(input.stream().distinct().collect(Collectors.toList())));
+        Optional.of(InputLoader.loadInput())
+                .map(input -> Printer.print(part1(input), input))
+                .map(input -> input.stream().distinct().collect(Collectors.toList()))
+                .map(input -> Printer.print(part2(input), input))
+                .orElseThrow(RuntimeException::new);
     }
 
     private static int part1(List<String> input) {

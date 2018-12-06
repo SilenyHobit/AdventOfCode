@@ -1,16 +1,18 @@
 package advent2018.day5;
 
 import util.InputLoader;
+import util.Printer;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        String input = InputLoader.loadInput().get(0);
-
-        System.out.println(part1(new StringBuilder(input)));
-        System.out.println(part2(input));
+        Optional.of(InputLoader.loadInput().get(0))
+                .map(line -> Printer.print(part1(new StringBuilder(line)), line))
+                .map(line -> Printer.print(part2(line), line))
+                .orElseThrow(RuntimeException::new);
     }
 
     private static int part2(String input) {

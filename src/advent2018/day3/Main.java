@@ -3,11 +3,13 @@ package advent2018.day3;
 import util.Conversion;
 import util.InputConverter;
 import util.InputLoader;
+import util.Printer;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,11 +21,10 @@ public class Main {
             m -> new LocalRectangle(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)), Integer.parseInt(m.group(4)), Integer.parseInt(m.group(5))));
 
     public static void main(String[] args) throws Exception {
-        InputConverter<LocalRectangle> converter = new InputConverter<>(Collections.singletonList(conversion));
-        List<LocalRectangle> rectangles = InputLoader.loadInput(converter);
-
-        System.out.println(part1(rectangles));
-        System.out.println(part2(rectangles));
+        Optional.of(InputLoader.loadInput(new InputConverter<>(Collections.singletonList(conversion))))
+                .map(rectangles -> Printer.print(part1(rectangles), rectangles))
+                .map(rectangles -> Printer.print(part2(rectangles), rectangles))
+                .orElseThrow(RuntimeException::new);
     }
 
     private static int part1(List<LocalRectangle> rectangles) {

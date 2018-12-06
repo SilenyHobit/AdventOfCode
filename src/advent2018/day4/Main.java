@@ -7,11 +7,9 @@ import advent2018.day4.events.WakeUp;
 import util.Conversion;
 import util.InputConverter;
 import util.InputLoader;
+import util.Printer;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -23,11 +21,10 @@ public class Main {
     private static final Conversion<Event> startShift = new Conversion<>(Pattern.compile("\\[(.*)] Guard #(\\d+) begins shift"), m -> new ShiftStart(m.group(1), m.group(2)));
 
     public static void main(String[] args) throws Exception {
-        InputConverter<Event> converter = new InputConverter<>(Arrays.asList(fallAsleep, wakeUp, startShift));
-        List<Event> input = InputLoader.loadInputSorted(converter);
-
-        System.out.println(part1(input));
-        System.out.println(part2(input));
+        Optional.of(InputLoader.loadInputSorted(new InputConverter<>(Arrays.asList(fallAsleep, wakeUp, startShift))))
+                .map(events -> Printer.print(part1(events), events))
+                .map(events -> Printer.print(part2(events), events))
+                .orElseThrow(RuntimeException::new);
     }
 
     private static int part1(List<Event> input) {

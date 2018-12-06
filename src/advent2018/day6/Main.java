@@ -1,9 +1,6 @@
 package advent2018.day6;
 
-import util.Conversion;
-import util.InputConverter;
-import util.InputLoader;
-import util.Pair;
+import util.*;
 
 import java.awt.*;
 import java.io.PrintStream;
@@ -23,16 +20,18 @@ public class Main {
             m -> new LocalPoint(counter.incrementAndGet(), Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2))));
 
     public static void main(String[] args) throws Exception {
-        List<LocalPoint> points = InputLoader.loadInput(new InputConverter<>(Collections.singletonList(conversion)));
-
         IntStream.range(-size/2, size/2)
                 .boxed()
                 .flatMap(i -> IntStream.range(-size/2, size/2).mapToObj(j -> new Point(i, j)))
-                .reduce(new Field(points, size), Field::addPoint, (a,b) -> a)
+                .reduce(createField(), Field::addPoint, (a,b) -> a)
                 .asOptional()
-                .map(field -> field.part1(System.out))
-                .map(field -> field.part2(System.out))
+                .map(Field::printPart1)
+                .map(Field::printPart2)
                 .orElseThrow(RuntimeException::new);
+    }
+
+    private static Field createField() throws Exception {
+        return new Field(InputLoader.loadInput(new InputConverter<>(Collections.singletonList(conversion))), size);
     }
 
     private static class LocalPoint extends Point {
@@ -81,20 +80,18 @@ public class Main {
             return point.x == lowerBound || point.x == upperBound || point.y == lowerBound || point.y == upperBound;
         }
 
-        public Field part1(PrintStream writer) {
+        public Field printPart1() {
             return pointsClaim.values().stream()
                     .map(AtomicLong::get)
                     .sorted(Comparator.reverseOrder())
                     .findFirst()
-                    .map(i -> writer.printf("%d%n", i))
-                    .map(w -> this)
+                    .map(i -> Printer.print(i, this))
                     .orElseThrow(RuntimeException::new);
         }
 
-        public Field part2(PrintStream writer) {
+        public Field printPart2() {
             return Optional.of(areaCount)
-                    .map(i -> writer.printf("%d%n", i))
-                    .map(w -> this)
+                    .map(i -> Printer.print(i, this))
                     .orElseThrow(RuntimeException::new);
         }
 

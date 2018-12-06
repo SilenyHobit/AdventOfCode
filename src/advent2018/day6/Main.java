@@ -3,11 +3,10 @@ package advent2018.day6;
 import util.*;
 
 import java.awt.*;
-import java.io.PrintStream;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -15,9 +14,8 @@ import java.util.stream.IntStream;
 public class Main {
 
     private static final int size = 1000;
-    private static final AtomicInteger counter = new AtomicInteger(1);
-    private final static Conversion<LocalPoint> conversion = new Conversion<>(Pattern.compile("(\\d+), (\\d+)"),
-            m -> new LocalPoint(counter.incrementAndGet(), Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2))));
+    private final static Conversion<Point> conversion = new Conversion<>(Pattern.compile("(\\d+), (\\d+)"),
+            m -> new Point(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2))));
 
     public static void main(String[] args) throws Exception {
         IntStream.range(-size/2, size/2)
@@ -34,33 +32,24 @@ public class Main {
         return new Field(InputLoader.loadInput(new InputConverter<>(Collections.singletonList(conversion))), size);
     }
 
-    private static class LocalPoint extends Point {
-        private final int index;
-
-        private LocalPoint(int index, int x, int y) {
-            super(x, y);
-            this.index = index;
-        }
-    }
-
     private static class Field {
-        private final Map<Integer, AtomicLong> pointsClaim;
-        private final List<LocalPoint> points;
+        private final Map<Point, AtomicLong> pointsClaim;
+        private final List<Point> points;
         private final int lowerBound;
         private final int upperBound;
 
         private int areaCount;
 
-        private Field(List<LocalPoint> points, int size) {
+        private Field(List<Point> points, int size) {
             this.points = points;
-            this.pointsClaim = points.stream().collect(Collectors.toMap(point -> point.index, point -> new AtomicLong(0L)));
+            this.pointsClaim = points.stream().collect(Collectors.toMap(Function.identity(),point -> new AtomicLong(0L)));
             this.lowerBound = -size/2;
             this.upperBound = (size/2)-1;
         }
 
         Field addPoint(Point point) {
-            List<Pair<Integer, Integer>> distances = points.stream()
-                    .map(p2 -> new Pair<>(p2.index, Math.abs(point.x - p2.x) + Math.abs(point.y - p2.y)))
+            List<Pair<Point, Integer>> distances = points.stream()
+                    .map(p2 -> new Pair<>(p2, Math.abs(point.x - p2.x) + Math.abs(point.y - p2.y)))
                     .sorted(Comparator.comparingInt(Pair::getSecond))
                     .collect(Collectors.toList());
 

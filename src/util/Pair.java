@@ -1,6 +1,7 @@
 package util;
 
 import java.util.Objects;
+import java.util.StringJoiner;
 
 public class Pair<T, U> {
 
@@ -34,5 +35,13 @@ public class Pair<T, U> {
     @Override
     public int hashCode() {
         return Objects.hashCode(first) + Objects.hashCode(second);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Pair.class.getSimpleName() + "[", "]")
+                .add("first=" + first)
+                .add("second=" + second)
+                .toString();
     }
 }

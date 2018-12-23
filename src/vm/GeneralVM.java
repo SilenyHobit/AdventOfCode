@@ -13,7 +13,7 @@ public class GeneralVM {
     private final Map<String, AtomicLong> registers;
     private final List<VMFunction> program;
 
-    private final AtomicInteger position;
+    protected final AtomicInteger position;
 
     public GeneralVM(List<VMFunction> program) {
         this.program = program;
@@ -23,7 +23,7 @@ public class GeneralVM {
 
     public GeneralVM withRegister(String register, long value) {
         return Optional.of(register)
-                .map(r -> registers.put(register, new AtomicLong(value)))
+                .map(r -> registers.computeIfAbsent(register, r2 -> new AtomicLong(value)))
                 .map(r -> this)
                 .orElseThrow(IllegalArgumentException::new);
     }

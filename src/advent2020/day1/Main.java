@@ -23,7 +23,7 @@ public class Main {
                     break;
                 if (sum == 2020) {
                     long result = numbers[i] * numbers[j];
-                    watcher.part1(builder -> builder.append(result));
+                    watcher.part1(result);
                     first = true;
                     finished = second;
                 }
@@ -33,7 +33,7 @@ public class Main {
                         break;
                     if (sum2 == 2020) {
                         long result = numbers[i] * numbers[j] * numbers[k];
-                        watcher.part2(builder -> builder.append(result));
+                        watcher.part2(result);
                         second = true;
                         finished = first;
                     }

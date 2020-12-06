@@ -19,8 +19,8 @@ public class Main {
         var aggregator = InputLoader.loadInput(new InputConverter<>(Collections.singletonList(PASSWORD_CONVERSION))).stream()
                 .reduce(new PasswordAggregator(), PasswordAggregator::next, (a1, a2) -> a1);
 
-        watcher.part1(builder -> builder.append(aggregator.task1()));
-        watcher.part2(builder -> builder.append(aggregator.task2()));
+        watcher.part1(aggregator.task1());
+        watcher.part2(aggregator.task2());
 
         watcher.finish();
     }

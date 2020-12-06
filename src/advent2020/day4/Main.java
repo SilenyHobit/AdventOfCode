@@ -13,8 +13,8 @@ public class Main {
                 .stream()
                 .reduce(new PassportAggregator(), PassportAggregator::nextPassport, (a1, a2) -> a1);
 
-        watcher.part1(builder -> builder.append(passportAggregator.part1()));
-        watcher.part2(builder -> builder.append(passportAggregator.part2()));
+        watcher.part1(passportAggregator.part1());
+        watcher.part2(passportAggregator.part2());
 
         watcher.finish();
     }

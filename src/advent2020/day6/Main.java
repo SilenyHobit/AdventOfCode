@@ -10,8 +10,8 @@ public class Main {
         var groupAggregator = InputLoader.loadInput().stream()
                 .reduce(new GroupAggregator(), GroupAggregator::next, (a1,a2) -> a1)
                 .finish();
-        watcher.part1(builder -> builder.append(groupAggregator.sum()));
-        watcher.part2(builder -> builder.append(groupAggregator.sum2()));
+        watcher.part1(groupAggregator.sum());
+        watcher.part2(groupAggregator.sum2());
 
         watcher.finish();
     }

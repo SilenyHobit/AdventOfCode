@@ -15,13 +15,13 @@ public class Main {
                 .sorted()
                 .toArray();
 
-        watcher.part1(builder -> builder.append(passes[passes.length-1]));
+        watcher.part1(passes[passes.length-1]);
 
         int missingId = Arrays.stream(passes)
                 .boxed()
                 .reduce(new SeatAggregator(), SeatAggregator::next, (a1, a2) -> a1)
                 .missingId();
-        watcher.part2(builder -> builder.append(missingId));
+        watcher.part2(missingId);
 
         watcher.finish();
     }

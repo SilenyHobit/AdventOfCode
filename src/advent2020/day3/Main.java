@@ -12,8 +12,8 @@ public class Main {
                 .toArray(char[][]::new);
 
         var hill = new Hill(input);
-        watcher.part1(builder -> builder.append(hill.part1()));
-        watcher.part2(builder -> builder.append(hill.part2()));
+        watcher.part1(hill.part1());
+        watcher.part2(hill.part2());
 
         watcher.finish();
     }

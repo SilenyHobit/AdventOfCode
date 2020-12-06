@@ -2,7 +2,7 @@ package advent2016.day14;
 
 import util.InputLoader;
 
-import javax.xml.bind.DatatypeConverter;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -72,7 +72,9 @@ public class Main {
         while (times-- != 0) {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] result = digest.digest(resultString.getBytes());
-            resultString = DatatypeConverter.printHexBinary(result).toLowerCase();
+            BigInteger bigInteger = new BigInteger(1, result);
+            resultString = String.format(
+                    "%0" + (result.length << 1) + "x", bigInteger);
         }
 
         return resultString;

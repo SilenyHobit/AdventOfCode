@@ -2,7 +2,7 @@ package advent2016.day17;
 
 import util.InputLoader;
 
-import javax.xml.bind.DatatypeConverter;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -51,7 +51,9 @@ public class Main {
     private static String hash(String original) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("MD5");
         byte[] result = digest.digest(original.getBytes());
-        String hashed = DatatypeConverter.printHexBinary(result).substring(0, 4);
+        BigInteger bigInteger = new BigInteger(1, result);
+        String hashed = String.format(
+                "%0" + (result.length << 1) + "x", bigInteger).substring(0, 4);
         return hashed.replaceAll("[0123456789A]", "0").replaceAll("[BCDEF]", "1");
     }
 

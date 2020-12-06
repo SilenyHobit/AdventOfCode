@@ -26,19 +26,10 @@ public class Main {
         if (index == 6) {
             boolean doubleValue = false;
             for (int i = 0; i < currentValue.length-1; i++) {
-                if (currentValue[i] == currentValue[i+1]) {
-                    if (enforceDouble && i < currentValue.length-2 && i > 0)
-                        doubleValue = currentValue[i+2] != currentValue[i] && currentValue[i-1] != currentValue[i];
-                    else if (enforceDouble && i < currentValue.length-2)
-                        doubleValue = currentValue[i+2] != currentValue[i];
-                    else if (enforceDouble && i > 0)
-                        doubleValue = currentValue[i-1] != currentValue[i];
-                    else
-                        doubleValue = true;
+                doubleValue = checkForDouble(i, currentValue, enforceDouble);
 
-                    if (doubleValue)
-                        break;
-                }
+                if (doubleValue)
+                    break;
             }
 
             if (doubleValue) {
@@ -59,6 +50,21 @@ public class Main {
             currentValue[index] = i;
             calculate(i, currentValue, index+1, counter, enforceDouble);
         }
+    }
+
+    private static boolean checkForDouble(int i, int[] currentValue, boolean enforceDouble) {
+        if (currentValue[i] == currentValue[i+1]) {
+            if (enforceDouble && i < currentValue.length-2 && i > 0)
+                return currentValue[i+2] != currentValue[i] && currentValue[i-1] != currentValue[i];
+            else if (enforceDouble && i < currentValue.length-2)
+                return currentValue[i+2] != currentValue[i];
+            else if (enforceDouble && i > 0)
+                return currentValue[i-1] != currentValue[i];
+            else
+                return true;
+        }
+
+        return false;
     }
 
 }

@@ -18,7 +18,7 @@ public class Group {
     }
 
     long sum2() {
-        return Arrays.stream(answers).map(i -> i / members).sum();
+        return Arrays.stream(answers).filter(i -> i == members).count();
     }
 
 }

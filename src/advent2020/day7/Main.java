@@ -30,7 +30,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         var watcher = new ExecutionWatcher();
+
         var bags = InputLoader.loadInput(new InputConverter<>(Arrays.asList(FULL_BAG, EMPTY_BAG)));
+        watcher.parsed();
 
         watcher.part1(count(bags));
 

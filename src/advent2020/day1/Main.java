@@ -11,6 +11,7 @@ public class Main {
                 .mapToLong(Long::parseLong)
                 .sorted()
                 .toArray();
+        watcher.parsed();
 
         boolean first = false;
         boolean second = false;

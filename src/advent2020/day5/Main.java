@@ -15,6 +15,8 @@ public class Main {
                 .sorted()
                 .toArray();
 
+        watcher.parsed();
+
         watcher.part1(passes[passes.length-1]);
 
         int missingId = Arrays.stream(passes)

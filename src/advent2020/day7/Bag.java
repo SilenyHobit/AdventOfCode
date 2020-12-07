@@ -7,6 +7,7 @@ public class Bag {
     private final String color;
     private final Map<String, Integer> bags;
     private List<Bag> potentialParents = new ArrayList<>();
+    private boolean visited;
 
     public Bag(String color, Map<String, Integer> bags) {
         this.color = color;
@@ -28,6 +29,14 @@ public class Bag {
 
     public Collection<Bag> getPotentialParents() {
         return Collections.unmodifiableCollection(potentialParents);
+    }
+
+    public void visit() {
+        visited = true;
+    }
+
+    public boolean isVisited() {
+        return visited;
     }
 
     @Override

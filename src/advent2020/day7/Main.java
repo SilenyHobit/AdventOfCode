@@ -43,29 +43,22 @@ public class Main {
 
         watcher.parsed();
 
-        watcher.part1(count(bags));
-
         var myBag = bags.get(MY_COLOR);
+        myBag.visit();
+        watcher.part1(count(myBag));
+
         watcher.part2(count2(myBag, bags));
 
         watcher.finish();
     }
 
-    private static long count(Map<String, Bag> bags) {
-        var myBag = bags.get(MY_COLOR);
-        var visited = new HashSet<String>();
-        visited.add(MY_COLOR);
-
-        return countRec(visited, myBag) - 1;
-    }
-
-    private static long countRec(Set<String> visited, Bag current) {
+    private static long count(Bag current) {
         var bagCounter = new LongAdder();
         current.getPotentialParents().stream()
-                .filter(bag -> !visited.contains(bag.getColor()))
+                .filter(bag -> !bag.isVisited())
                 .forEach(bag -> {
-                    visited.add(bag.getColor());
-                    bagCounter.add(countRec(visited, bag));
+                    bag.visit();
+                    bagCounter.add(count(bag));
                 });
 
         bagCounter.increment();

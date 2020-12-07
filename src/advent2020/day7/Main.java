@@ -43,23 +43,24 @@ public class Main {
     }
 
     private static long count(List<Bag> bags) {
-        Queue<String> toScan = new LinkedList<>();
+        var internalBags = new ArrayList<>(bags);
+        Queue<String> toScan = new ArrayDeque<>();
         toScan.add(MY_COLOR);
-        var scanned = new HashSet<>();
+        var myBag = find(MY_COLOR, bags);
+        internalBags.remove(myBag);
 
         var bagCounter = new LongAdder();
         while (!toScan.isEmpty()) {
-            String next = toScan.poll();
-            scanned.add(next);
-            bags.stream()
-                    .filter(bag -> bag.getBags().containsKey(next))
-                    .forEach(bag -> {
-                        if (!scanned.contains(bag.getColor())) {
-                            scanned.add(bag.getColor());
-                            toScan.add(bag.getColor());
-                            bagCounter.increment();
-                        }
-                    });
+            var next = toScan.poll();
+            var iterator = internalBags.iterator();
+            while(iterator.hasNext()) {
+                var bag = iterator.next();
+                if (bag.getBags().containsKey(next)) {
+                    iterator.remove();
+                    toScan.add(bag.getColor());
+                    bagCounter.increment();
+                }
+            }
         }
 
         return bagCounter.sum();

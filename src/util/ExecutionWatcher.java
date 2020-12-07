@@ -25,7 +25,7 @@ public class ExecutionWatcher {
                 .findFirst()
                 .map(pattern::matcher)
                 .filter(Matcher::find)
-                .ifPresent(matcher -> builder.append("RUNNING ").append(matcher.group(1)).append('-').append(matcher.group(2)).append('\n')
+                .ifPresent(matcher -> builder.append("RUNNING ").append(matcher.group(1)).append('-').append(matcher.group(2).replace("day", "")).append('\n')
                         .append("-----------------------------------------------------------------\n"));
         this.start = Instant.now();
     }

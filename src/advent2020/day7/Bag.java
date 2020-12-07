@@ -6,6 +6,7 @@ public class Bag {
 
     private final String color;
     private final Map<String, Integer> bags;
+    private List<Bag> potentialParents = new ArrayList<>();
 
     public Bag(String color, Map<String, Integer> bags) {
         this.color = color;
@@ -18,6 +19,15 @@ public class Bag {
 
     public Map<String, Integer> getBags() {
         return bags;
+    }
+
+    public void addPotentialParent(Bag parent) {
+        potentialParents = new ArrayList<>(potentialParents);
+        potentialParents.add(parent);
+    }
+
+    public Collection<Bag> getPotentialParents() {
+        return Collections.unmodifiableCollection(potentialParents);
     }
 
     @Override

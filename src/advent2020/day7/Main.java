@@ -7,7 +7,10 @@ import util.InputLoader;
 
 import java.util.*;
 import java.util.concurrent.atomic.LongAdder;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+
+import static java.util.stream.Collectors.*;
 
 public class Main {
 
@@ -31,56 +34,52 @@ public class Main {
     public static void main(String[] args) throws Exception {
         var watcher = new ExecutionWatcher();
 
-        var bags = InputLoader.loadInput(new InputConverter<>(Arrays.asList(FULL_BAG, EMPTY_BAG)));
+        var bags = InputLoader.loadInput(new InputConverter<>(Arrays.asList(FULL_BAG, EMPTY_BAG))).stream()
+                .collect(toMap(Bag::getColor, Function.identity()));
+
+        bags.forEach((color, bag) -> bag.getBags().keySet()
+                .forEach(innerBag -> bags.get(innerBag).addPotentialParent(bag))
+        );
+
         watcher.parsed();
 
         watcher.part1(count(bags));
 
-        var myBag = find(MY_COLOR, bags);
+        var myBag = bags.get(MY_COLOR);
         watcher.part2(count2(myBag, bags));
 
         watcher.finish();
     }
 
-    private static long count(List<Bag> bags) {
-        var internalBags = new ArrayList<>(bags);
-        Queue<String> toScan = new ArrayDeque<>();
-        toScan.add(MY_COLOR);
-        var myBag = find(MY_COLOR, bags);
-        internalBags.remove(myBag);
+    private static long count(Map<String, Bag> bags) {
+        var myBag = bags.get(MY_COLOR);
+        var visited = new HashSet<String>();
+        visited.add(MY_COLOR);
 
+        return countRec(visited, myBag) - 1;
+    }
+
+    private static long countRec(Set<String> visited, Bag current) {
         var bagCounter = new LongAdder();
-        while (!toScan.isEmpty()) {
-            var next = toScan.poll();
-            var iterator = internalBags.iterator();
-            while(iterator.hasNext()) {
-                var bag = iterator.next();
-                if (bag.getBags().containsKey(next)) {
-                    iterator.remove();
-                    toScan.add(bag.getColor());
-                    bagCounter.increment();
-                }
-            }
-        }
+        current.getPotentialParents().stream()
+                .filter(bag -> !visited.contains(bag.getColor()))
+                .forEach(bag -> {
+                    visited.add(bag.getColor());
+                    bagCounter.add(countRec(visited, bag));
+                });
 
+        bagCounter.increment();
         return bagCounter.sum();
     }
 
-    private static long count2(Bag bag, List<Bag> bags) {
+    private static long count2(Bag bag, Map<String, Bag> bags) {
         var counter = new LongAdder();
         bag.getBags().forEach((color, count) -> {
-            Bag innerBag = find(color, bags);
+            Bag innerBag = bags.get(color);
             counter.add(count * (count2(innerBag, bags) + 1));
         });
 
         return counter.sum();
-    }
-
-    private static Bag find(String bagColor, List<Bag> bags) {
-        return bags.stream()
-                .filter(bag -> bag.getColor().equals(bagColor))
-                .findFirst()
-                .orElseThrow();
     }
 
 }

@@ -42,12 +42,10 @@ public class Main {
         List<VM2020Op> modifiedOps;
         if (op instanceof Jmp) {
             modifiedOps = new ArrayList<>(operations);
-            modifiedOps.remove(index);
-            modifiedOps.add(index, ((Jmp) op).toNop());
+            modifiedOps.set(index, ((Jmp) op).toNop());
         } else if (op instanceof Nop) {
             modifiedOps = new ArrayList<>(operations);
-            modifiedOps.remove(index);
-            modifiedOps.add(index, ((Nop) op).toJmp());
+            modifiedOps.set(index, ((Nop) op).toJmp());
         } else
             return false;
 

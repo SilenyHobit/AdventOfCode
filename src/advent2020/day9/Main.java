@@ -15,13 +15,11 @@ public class Main {
                 .mapToLong(Long::parseLong)
                 .toArray();
 
-        long[][] cache = new long[numbers.length][numbers.length];
-
         watcher.parsed();
 
         int invalid = PREAMBLE;
         for (; invalid < numbers.length; invalid++) {
-            if (!check(numbers, cache, invalid)) {
+            if (!check(numbers, invalid)) {
                 break;
             }
         }
@@ -49,12 +47,10 @@ public class Main {
         watcher.finish();
     }
 
-    private static boolean check(long[] numbers, long[][] cache, int testedIndex) {
+    private static boolean check(long[] numbers, int testedIndex) {
         for (int i = testedIndex-PREAMBLE; i < testedIndex; i++) {
             for (int j = i; j < testedIndex; j++) {
-                if (cache[i][j] == 0L)
-                    cache[i][j] = numbers[i] + numbers[j];
-                if (cache[i][j] == numbers[testedIndex])
+                if (numbers[i] + numbers[j] == numbers[testedIndex])
                     return true;
             }
         }
